@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class FirstFragment : Fragment() {
@@ -36,9 +37,23 @@ class FirstFragment : Fragment() {
         val maxValueField : EditText = view.findViewById(R.id.max_value)
 
             generateButton?.setOnClickListener {
-                val min = minValueField.text.toString().toInt()
-                val max = maxValueField.text.toString().toInt()
-                listener?.onButtonClicked(min, max)
+                val minStr = minValueField.text.toString()
+                val maxStr = maxValueField.text.toString()
+                if (minStr.length >= 11 || maxStr.length >= 11)
+                    Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG).show()
+                else {
+                    val min = minStr.toLongOrNull()
+                    val max = maxStr.toLongOrNull()
+                    if (min != null && max != null)
+                        if (min < max)
+                            if (min <= MAX_INTEGER_VALUE && max <= MAX_INTEGER_VALUE)
+                                listener?.onButtonClicked(min.toInt(), max.toInt())
+                            else Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG).show()
+                        else
+                            Toast.makeText(context, "Max value is bigger than min value", Toast.LENGTH_LONG).show()
+                    else
+                        Toast.makeText(context, "Input numbers", Toast.LENGTH_LONG).show()
+                }
         }
     }
 
@@ -58,5 +73,6 @@ class FirstFragment : Fragment() {
         }
 
         private const val PREVIOUS_RESULT_KEY = "PREVIOUS_RESULT"
+        private const val MAX_INTEGER_VALUE = 2_147_483_647
     }
 }
