@@ -16,12 +16,13 @@ class SecondFragment : Fragment() {
     private var backButton: Button? = null
     private var result: TextView? = null
     private var listener: BackButtonClickedListener? = null
+    private var currentResult = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                listener?.onBackButtonClicked(0)
+                listener?.onBackButtonClicked(currentResult)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -47,14 +48,14 @@ class SecondFragment : Fragment() {
         val min = arguments?.getInt(MIN_VALUE_KEY) ?: 0
         val max = arguments?.getInt(MAX_VALUE_KEY) ?: 0
         result?.text = generate(min, max).toString()
+        currentResult = result?.text.toString().toInt()
         backButton?.setOnClickListener {
-            val currentResult = result?.text.toString().toInt()
             listener?.onBackButtonClicked(currentResult)
         }
     }
 
     interface BackButtonClickedListener {
-        fun onBackButtonClicked (previousResult : Int)
+        fun onBackButtonClicked(previousResult: Int)
     }
 
     private fun generate(min: Int, max: Int): Int {

@@ -33,32 +33,37 @@ class FirstFragment : Fragment() {
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
-        val minValueField : EditText = view.findViewById(R.id.min_value)
-        val maxValueField : EditText = view.findViewById(R.id.max_value)
+        val minValueField: EditText = view.findViewById(R.id.min_value)
+        val maxValueField: EditText = view.findViewById(R.id.max_value)
 
-            generateButton?.setOnClickListener {
-                val minStr = minValueField.text.toString()
-                val maxStr = maxValueField.text.toString()
-                if (minStr.length >= 11 || maxStr.length >= 11)
-                    Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG).show()
-                else {
-                    val min = minStr.toLongOrNull()
-                    val max = maxStr.toLongOrNull()
-                    if (min != null && max != null)
-                        if (min < max)
-                            if (min <= MAX_INTEGER_VALUE && max <= MAX_INTEGER_VALUE)
-                                listener?.onButtonClicked(min.toInt(), max.toInt())
-                            else Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG).show()
-                        else
-                            Toast.makeText(context, "Max value is bigger than min value", Toast.LENGTH_LONG).show()
+        generateButton?.setOnClickListener {
+            val minStr = minValueField.text.toString()
+            val maxStr = maxValueField.text.toString()
+            if (minStr.length >= 11 || maxStr.length >= 11)
+                Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG).show()
+            else {
+                val min = minStr.toLongOrNull()
+                val max = maxStr.toLongOrNull()
+                if (min != null && max != null)
+                    if (min < max)
+                        if (min <= MAX_INTEGER_VALUE && max <= MAX_INTEGER_VALUE)
+                            listener?.onButtonClicked(min.toInt(), max.toInt())
+                        else Toast.makeText(context, "Too big number or numbers", Toast.LENGTH_LONG)
+                            .show()
                     else
-                        Toast.makeText(context, "Input numbers", Toast.LENGTH_LONG).show()
-                }
+                        Toast.makeText(
+                            context,
+                            "The min value is greater than or equal to the max value",
+                            Toast.LENGTH_LONG
+                        ).show()
+                else
+                    Toast.makeText(context, "Please input numbers", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
     interface GenerateButtonClickedListener {
-        fun onButtonClicked(min : Int, max : Int)
+        fun onButtonClicked(min: Int, max: Int)
     }
 
     companion object {
